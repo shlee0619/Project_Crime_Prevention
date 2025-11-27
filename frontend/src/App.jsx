@@ -27,7 +27,7 @@ function App() {
 
         } catch (error) {
             console.error("Error fetching data:", error);
-            alert("Failed to fetch data. Ensure backend is running.");
+            alert("데이터를 가져오는데 실패했습니다. 백엔드가 실행 중인지 확인하세요.");
         } finally {
             setLoading(false);
         }
@@ -36,8 +36,8 @@ function App() {
     return (
         <div className="app-container">
             <header className="header">
-                <h1>Safe-Housing Map</h1>
-                <p>Protecting single-person households & students</p>
+                <h1>안심 주거 지도</h1>
+                <p>1인 가구 및 대학생을 위한 안전한 주거 찾기</p>
             </header>
 
             <main className="main-content">
@@ -45,13 +45,13 @@ function App() {
                     <form onSubmit={handleSearch} className="search-form">
                         <input
                             type="text"
-                            placeholder="Enter Address (e.g., Gangnam-gu Samsung-dong)"
+                            placeholder="주소를 입력하세요 (예: 강남구 삼성동)"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                             className="search-input"
                         />
                         <button type="submit" className="search-btn" disabled={loading}>
-                            {loading ? 'Analyzing...' : 'Check Safety'}
+                            {loading ? '분석 중...' : '안전도 확인'}
                         </button>
                     </form>
 
@@ -59,7 +59,7 @@ function App() {
 
                     {!data && (
                         <div className="placeholder-info">
-                            <p>Enter an address to analyze Jeonse fraud risk and safety index.</p>
+                            <p>주소를 입력하여 전세 사기 위험도와 안전 지수를 확인하세요.</p>
                         </div>
                     )}
                 </div>
