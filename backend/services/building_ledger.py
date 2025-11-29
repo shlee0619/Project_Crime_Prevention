@@ -37,14 +37,6 @@ class BuildingLedgerService:
         if self.df is None or self.df.empty:
             return []
 
-    def get_building_info(self, address: str) -> List[dict]:
-        """
-        Search building info by address.
-        Returns a list of building items (dicts).
-        """
-        if self.df is None or self.df.empty:
-            return []
-
         # Simple containment search
         # Filter where address is in '지번주소' or '도로명주소'
         mask = pd.Series([False] * len(self.df))

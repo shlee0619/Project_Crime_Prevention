@@ -8,10 +8,10 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -22,7 +22,7 @@ function ChangeView({ center, zoom }) {
   return null;
 }
 
-const SafeMap = ({ center, markers }) => {
+const SafeMap = ({ center, markers, policeStations = [] }) => {
   return (
     <div className="map-container">
       <MapContainer center={center} zoom={15} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
@@ -32,16 +32,45 @@ const SafeMap = ({ center, markers }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {markers.map((marker, idx) => (
-          <Marker key={idx} position={marker.position}>
+          <Marker key={`marker-${idx}`} position={marker.position}>
             <Popup>
               {marker.content}
             </Popup>
           </Marker>
         ))}
-        
+
+        {/* Police Stations */}
+        {policeStations.map((station, idx) => (
+          <Marker
+            key={`police-${idx}`}
+            position={[station.lat, station.lng]}
+            icon={new L.Icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            })}
+          >
+            <Popup>
+              <strong>{station.name}</strong><br />
+              {station.type}<br />
+              {station.address}
+            </Popup>
+          </Marker>
+        ))}
+
         {/* Current Location Marker */}
-        <Marker position={center}>
-            <Popup>Target Location</Popup>
+        <Marker position={center} icon={new L.Icon({
+          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        })}>
+          <Popup>Target Location</Popup>
         </Marker>
       </MapContainer>
     </div>

@@ -28,6 +28,7 @@ class RiskCalculator:
         # New buildings often have inflated prices and no market price history.
         # Korean key: 사용승인일 (useAprDay)
         use_apr_day = building_item.get("사용승인일") or building_item.get("useAprDay")
+        age = 0
         if use_apr_day and len(str(use_apr_day)) >= 4:
             try:
                 build_year = int(str(use_apr_day)[:4])

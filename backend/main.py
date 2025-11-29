@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 app = FastAPI(title="Safe-Housing Map API")
 
@@ -19,9 +19,12 @@ class AddressRequest(BaseModel):
 
 class RiskScoreResponse(BaseModel):
     address: str
+    lat: float
+    lng: float
     risk_score: int
     safety_index: int
     details: dict
+    police_stations: List[dict]
 
 @app.get("/")
 def read_root():
@@ -59,7 +62,13 @@ def get_risk_score(address: str):
             
     police_count = geo_service.get_police_count(region_keyword)
     
-    # 3. Calculate scores
+    # 3. Geocode Address
+    lat, lng = geo_service.geocode(address)
+    
+    # 4. Get Police Stations for Map
+    police_stations = geo_service.get_police_stations(region_keyword, lat, lng)
+    
+    # 5. Calculate scores
     risk_score = risk_calculator.calculate_jeonse_risk(target_building)
     
     # Mock store distance for now (or implement similar density logic if data available)
@@ -69,6 +78,8 @@ def get_risk_score(address: str):
     
     return {
         "address": address,
+        "lat": lat,
+        "lng": lng,
         "risk_score": risk_score,
         "safety_index": safety_index,
         "details": {
@@ -77,5 +88,6 @@ def get_risk_score(address: str):
             "police_count_in_region": police_count,
             "region_keyword": region_keyword,
             "nearest_store_km": store_dist
-        }
+        },
+        "police_stations": police_stations
     }

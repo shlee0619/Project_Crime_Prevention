@@ -1,6 +1,8 @@
 import math
 import pandas as pd
 import os
+import requests
+import random
 
 class GeoService:
     POLICE_CSV_PATH = "데이터/경찰청_전국 지구대 파출소 주소 현황_20241231.csv"
@@ -40,12 +42,64 @@ class GeoService:
         mask = self.police_df['주소'].str.contains(region_keyword, na=False)
         return int(mask.sum())
 
+    def get_police_stations(self, region_keyword: str, center_lat: float, center_lon: float) -> list:
+        """
+        Get list of police stations in the region.
+        Since CSV has no coordinates, we mock them around the center for visualization.
+        In a real app, we would geocode these or use a dataset with coords.
+        """
+        if self.police_df is None or self.police_df.empty:
+            return []
+
+        # Filter by address containing the keyword
+        mask = self.police_df['주소'].str.contains(region_keyword, na=False)
+        filtered_df = self.police_df[mask]
+        
+        stations = []
+        for idx, row in filtered_df.iterrows():
+            # Mock coordinates: random offset from center within ~1km
+            # 1 deg lat ~ 111km, 0.01 ~ 1.1km
+            lat_offset = random.uniform(-0.005, 0.005)
+            lon_offset = random.uniform(-0.005, 0.005)
+            
+            stations.append({
+                "name": row['관서명'],
+                "address": row['주소'],
+                "lat": center_lat + lat_offset,
+                "lng": center_lon + lon_offset,
+                "type": row['구분']
+            })
+            
+            # Limit to 10 for demo
+            if len(stations) >= 10:
+                break
+                
+        return stations
+
     def geocode(self, address: str):
         """
-        Convert address to (lat, lon).
-        Mock implementation for now.
+        Convert address to (lat, lon) using Nominatim (OSM).
         """
-        # Seoul City Hall as default mock
+        try:
+            url = "https://nominatim.openstreetmap.org/search"
+            params = {
+                "q": address,
+                "format": "json",
+                "limit": 1
+            }
+            headers = {
+                "User-Agent": "SafeHousingMap/1.0 (shlee@example.com)" 
+            }
+            response = requests.get(url, params=params, headers=headers, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data:
+                return float(data[0]["lat"]), float(data[0]["lon"])
+        except Exception as e:
+            print(f"Geocoding failed for {address}: {e}")
+        
+        # Fallback: Seoul City Hall
         return 37.5665, 126.9780
 
     def calculate_distance(self, lat1, lon1, lat2, lon2):

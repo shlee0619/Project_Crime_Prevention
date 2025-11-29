@@ -50,6 +50,7 @@ const ScoreCard = ({ data }) => {
                 <p>주용도: {details.main_purpose}</p>
                 <p>관할 경찰서 수: {details.police_count_in_region}개 (동 내)</p>
                 <p>편의점 거리: {details.nearest_store_km} km (예상)</p>
+                {/* Add more details if available */}
             </div>
         </div>
     );
