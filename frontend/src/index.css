@@ -112,3 +112,30 @@ body {
 .leaflet-container {
   background: #1a1b1e;
 }
+
+/* Tabs */
+.tabs button {
+  transition: all 0.2s;
+}
+
+.tabs button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Surrounding Info */
+.surrounding-info ul::-webkit-scrollbar {
+  width: 4px;
+}
+
+.surrounding-info ul::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.surrounding-info ul::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 2px;
+}
+
+.surrounding-info ul::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

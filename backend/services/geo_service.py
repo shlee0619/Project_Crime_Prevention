@@ -115,3 +115,42 @@ class GeoService:
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         d = R * c
         return d
+
+    def get_restaurants(self, center_lat: float, center_lon: float) -> list:
+        """
+        Get list of mock restaurants.
+        """
+        restaurants = []
+        names = ["Delicious BBQ", "Spicy Tteokbokki", "Sushi Master", "Burger Heaven", "Pasta House"]
+        
+        for i in range(5):
+            lat_offset = random.uniform(-0.003, 0.003)
+            lon_offset = random.uniform(-0.003, 0.003)
+            
+            restaurants.append({
+                "name": f"{names[i]}",
+                "lat": center_lat + lat_offset,
+                "lng": center_lon + lon_offset,
+                "rating": round(random.uniform(3.5, 5.0), 1),
+                "type": "Restaurant"
+            })
+        return restaurants
+
+    def get_convenience_stores(self, center_lat: float, center_lon: float) -> list:
+        """
+        Get list of mock convenience stores (Safety Havens).
+        """
+        stores = []
+        names = ["CU", "GS25", "7-Eleven", "Emart24"]
+        
+        for i in range(4):
+            lat_offset = random.uniform(-0.003, 0.003)
+            lon_offset = random.uniform(-0.003, 0.003)
+            
+            stores.append({
+                "name": f"{random.choice(names)}",
+                "lat": center_lat + lat_offset,
+                "lng": center_lon + lon_offset,
+                "type": "Convenience Store"
+            })
+        return stores

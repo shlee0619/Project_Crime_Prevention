@@ -22,7 +22,7 @@ function ChangeView({ center, zoom }) {
   return null;
 }
 
-const SafeMap = ({ center, markers, policeStations = [] }) => {
+const SafeMap = ({ center, markers, policeStations = [], restaurants = [], stores = [] }) => {
   return (
     <div className="map-container">
       <MapContainer center={center} zoom={15} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
@@ -57,6 +57,49 @@ const SafeMap = ({ center, markers, policeStations = [] }) => {
               <strong>{station.name}</strong><br />
               {station.type}<br />
               {station.address}
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* Restaurants */}
+        {restaurants.map((place, idx) => (
+          <Marker
+            key={`restaurant-${idx}`}
+            position={[place.lat, place.lng]}
+            icon={new L.Icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            })}
+          >
+            <Popup>
+              <strong>{place.name}</strong><br />
+              {place.type}<br />
+              Rating: {place.rating}
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* Convenience Stores */}
+        {stores.map((store, idx) => (
+          <Marker
+            key={`store-${idx}`}
+            position={[store.lat, store.lng]}
+            icon={new L.Icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            })}
+          >
+            <Popup>
+              <strong>{store.name}</strong><br />
+              {store.type}
             </Popup>
           </Marker>
         ))}

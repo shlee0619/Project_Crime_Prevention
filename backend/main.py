@@ -25,6 +25,8 @@ class RiskScoreResponse(BaseModel):
     safety_index: int
     details: dict
     police_stations: List[dict]
+    restaurants: List[dict]
+    convenience_stores: List[dict]
 
 @app.get("/")
 def read_root():
@@ -65,8 +67,10 @@ def get_risk_score(address: str):
     # 3. Geocode Address
     lat, lng = geo_service.geocode(address)
     
-    # 4. Get Police Stations for Map
+    # 4. Get Nearby Places
     police_stations = geo_service.get_police_stations(region_keyword, lat, lng)
+    restaurants = geo_service.get_restaurants(lat, lng)
+    stores = geo_service.get_convenience_stores(lat, lng)
     
     # 5. Calculate scores
     risk_score = risk_calculator.calculate_jeonse_risk(target_building)
@@ -89,5 +93,7 @@ def get_risk_score(address: str):
             "region_keyword": region_keyword,
             "nearest_store_km": store_dist
         },
-        "police_stations": police_stations
+        "police_stations": police_stations,
+        "restaurants": restaurants,
+        "convenience_stores": stores
     }
